@@ -4,7 +4,7 @@ import './doge2.jpg';
 import jsonData from './output.json';
 import axios from 'axios';
 
-const reactStringReplace = require('react-string-replace')
+const cheerio = require('cheerio');
 
 class App extends Component {
   state = {
@@ -14,7 +14,8 @@ class App extends Component {
     loading: false,
     Historicdate: 0,
     percent: null,
-    RounderState: null
+    RounderState: null,
+    responseData: null,
   }
 
   investHandler = (event) => {
@@ -34,7 +35,7 @@ class App extends Component {
     const reactStringReplace = require('react-string-replace')
 
     let replacedText = reactStringReplace(jsn, "\n", (match, i) => (
-      <a></a>
+      <div></div>
     ));
 
     let str = this.state.data.title;
@@ -51,7 +52,7 @@ class App extends Component {
 
     let per = (100*(replacedText[24]/k)).toFixed(2);
 
-    let updatedPage = () => {
+    const updatedPage = () => {
       if(!isNaN(rounder)){
         return (
           <div>
@@ -62,6 +63,13 @@ class App extends Component {
           </div>
         )
       }
+    }
+
+    const axiosGet = () => {
+      axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end=20200407')
+      .then((response)=>{if(response.data){this.setState({responseData: response.data})}})
+      .then(()=>{if(this.state.responseData !== null){console.log(this.state.responseData)}})
+      .then(()=>{const page = cheerio.load('<html lang="en">...</html>')})
     }
 
     return (
@@ -75,18 +83,21 @@ class App extends Component {
           alt="dogecoin" />
         <br></br>
         <br></br>
-        <a>Date (ex: Apr 02, 2014): </a>
-        <input
-          type="text"
-          className="date"
-          onChange={this.dateHandler}
-          key="date" />
-        <a>  Investment (US$): </a>
-        <input
-          type="text"
-          className="Investment"
-          onChange={this.investHandler}
-          key="invest" />
+        <div className="Inputs">
+          <div>Date (ex: Apr 02, 2014): &nbsp;</div>
+          <input
+            type="text"
+            className="date"
+            onChange={this.dateHandler}
+            key="date" />
+            &nbsp;
+          <div>  Investment (US$): &nbsp;</div>
+          <input
+            type="text"
+            className="Investment"
+            onChange={this.investHandler}
+            key="invest" />
+        </div>
         <br></br>
         <p>Today, Bitcoin is worth ${replacedText[24]}.</p>
         {updatedPage()}

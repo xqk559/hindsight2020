@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+.Inputs {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+}
+
 .list {
   max-width: 70px;
 }
