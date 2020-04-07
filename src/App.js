@@ -18,13 +18,6 @@ class App extends Component {
     RounderState: null
   }
 
-  // componentDidMount () {
-  //   axios.get('https://udemy-react-60d5e.firebaseio.com/date.json')
-  //     .then(response => {
-  //       this.setState({Historicdate: response.data})
-  //     });
-  // }
-
   investHandler = (event) => {
     this.setState({
       Investment: event.target.value
@@ -60,23 +53,13 @@ class App extends Component {
     let coins = this.state.Investment/k;
     let rounder = coins.toFixed(5);
 
-    let string1 = replacedText.toString();
-
     let todayValue;
     todayValue = rounder * replacedText[24];
     let tvRound = todayValue.toFixed(2);
 
-    let n = 24;
-
     let per = (100*(replacedText[24]/k)).toFixed(2);
 
-    let uhf = null;
-
     let load = <div>Not Loading</div>
-
-    if (per>1000) {
-      uhf = <a href="https://www.youtube.com/watch?v=qileP4bAzek">Follow-up Link</a>;
-    }
 
     if ( this.state.loading ) {
       load = < Spinner />;
@@ -121,20 +104,23 @@ class App extends Component {
         <br></br>
         <br></br>
         <a>Date (ex: Apr 02, 2014): </a>
-        <input type="text" className="date" onChange={this.dateHandler} key="date" />
+        <input
+          type="text"
+          className="date"
+          onChange={this.dateHandler}
+          key="date" />
         <a>  Investment (US$): </a>
-        <input type="text" className="Investment" onChange={this.investHandler} key="invest" />
+        <input
+          type="text"
+          className="Investment"
+          onChange={this.investHandler}
+          key="invest" />
         <br></br>
         <p>Today, Bitcoin is worth ${replacedText[24]}.</p>
         <p>On {this.state.Date1}, Bitcoin was worth ${k}.</p>
         <p>If you invested ${this.state.Investment} on {this.state.Date1},</p>
         <p>You would have {rounder} coins, valued today at ${tvRound}.</p>
         <p>This would be a {per}% difference.</p>
-        <br></br>
-        <p>{uhf}</p>
-        <button onClick={axioses}>Upload via AXIOS</button>
-        <div>{load}</div>
-        <div>{this.state.Historicdate}</div>
       </div>
 
     );
