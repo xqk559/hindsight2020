@@ -5,6 +5,14 @@ import jsonData from './output.json';
 import axios from 'axios';
 
 const cheerio = require('cheerio');
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+
+today = yyyy + mm + dd;
+
+console.log(today)
 
 const App = () => {
   const [json, setJsonData] = useState(jsonData)
@@ -12,12 +20,15 @@ const App = () => {
   const [investment, setInvestment] = useState(0)
   const [axiosData, setAxiosData] = useState(null)
 
+  let page = null;
+
   useEffect(()=>{
-    axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end=20200407')
+    axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end='+today.toString())
       .then((response)=>{if(response.data){setAxiosData(response.data)}})
       .then(()=>{if(axiosData !== null){console.log(axiosData)}})
-      .then(()=>{const page = cheerio.load('<html lang="en">...</html>')})
-  },[])
+      // .then(()=>{page = cheerio.load('<html lang="en">...</html>')})
+      // .then(()=>console.log(page))
+  },[axiosData])
 
   const investHandler = (event) => {
     setInvestment(event.target.value)
@@ -49,7 +60,7 @@ const App = () => {
   let per = (100*(replacedText[24]/k)).toFixed(2);
 
   const updatedPage = () => {
-    if(!isNaN(rounder) && investment !== 0 && date.length == 12){
+    if(!isNaN(rounder) && investment !== 0 && date.length === 12){
       return (
         <div>
           <p>On {date}, Bitcoin was worth ${k}.</p>
