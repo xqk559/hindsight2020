@@ -7,39 +7,25 @@ import axios from 'axios';
 const cheerio = require('cheerio');
 
 const App = () => {
-  const state = {
-    data: jsonData,
-    Investment: 0,
-    Date1: null,
-    loading: false,
-    Historicdate: 0,
-    percent: null,
-    RounderState: null,
-    responseData: null,
-  }
-
-  const [json, getJsonData] = useState(jsonData)
-  const [date, getDate] = useState(null)
-  const [investment, getInvestment] = useState(0)
-
-  const investHandler = (event) => {
-    this.setState({
-      Investment: event.target.value
-    })
-  }
-
-  const dateHandler = (event) => {
-    this.setState({
-      Date1: event.target.value
-    })
-  }
+  const [json, setJsonData] = useState(jsonData)
+  const [date, setDate] = useState(null)
+  const [investment, setInvestment] = useState(0)
+  const [axiosData, setAxiosData] = useState(null)
 
   useEffect(()=>{
     axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end=20200407')
-      .then((response)=>{if(response.data){this.setState({responseData: response.data})}})
-      .then(()=>{if(this.state.responseData !== null){console.log(this.state.responseData)}})
+      .then((response)=>{if(response.data){setAxiosData(response.data)}})
+      .then(()=>{if(axiosData !== null){console.log(axiosData)}})
       .then(()=>{const page = cheerio.load('<html lang="en">...</html>')})
   },[])
+
+  const investHandler = (event) => {
+    setInvestment(event.target.value)
+  }
+
+  const dateHandler = (event) => {
+    setDate(event.target.value)
+  }
 
   let jsn = json.title;
   const reactStringReplace = require('react-string-replace')
@@ -63,7 +49,7 @@ const App = () => {
   let per = (100*(replacedText[24]/k)).toFixed(2);
 
   const updatedPage = () => {
-    if(!isNaN(rounder)){
+    if(!isNaN(rounder) && investment !== 0 && date.length == 12){
       return (
         <div>
           <p>On {date}, Bitcoin was worth ${k}.</p>
