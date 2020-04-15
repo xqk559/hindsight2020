@@ -20,6 +20,7 @@ const App = () => {
 
   const [json, getJsonData] = useState(jsonData)
   const [date, getDate] = useState(null)
+  const [investment, getInvestment] = useState(0)
 
   const investHandler = (event) => {
     this.setState({
@@ -52,7 +53,7 @@ const App = () => {
 
   let k = str.slice(searchAlt+13,searchAlt+19);
 
-  let coins = this.state.Investment/k;
+  let coins = investment/k;
   let rounder = coins.toFixed(5);
 
   let todayValue;
@@ -66,7 +67,7 @@ const App = () => {
       return (
         <div>
           <p>On {date}, Bitcoin was worth ${k}.</p>
-          <p>If you invested ${this.state.Investment} on {date},</p>
+          <p>If you invested ${investment} on {date},</p>
           <p>You would have {rounder} coins, valued today at ${tvRound}.</p>
           <p>This would be a {per}% difference.</p>
         </div>
@@ -90,14 +91,14 @@ const App = () => {
         <input
           type="text"
           className="date"
-          onChange={this.dateHandler}
+          onChange={dateHandler}
           key="date" />
           &nbsp;
         <div>  Investment (US$): &nbsp;</div>
         <input
           type="text"
           className="Investment"
-          onChange={this.investHandler}
+          onChange={investHandler}
           key="invest" />
       </div>
       <br></br>
