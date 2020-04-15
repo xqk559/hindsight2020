@@ -11,10 +11,8 @@ var yyyy = today.getFullYear();
 
 today = yyyy + mm + dd;
 
-console.log(today)
-
 const App = () => {
-  const [json, setJsonData] = useState(jsonData)
+  const [json] = useState(jsonData)
   const [date, setDate] = useState(null)
   const [investment, setInvestment] = useState(0)
   const [axiosData, setAxiosData] = useState(null)
