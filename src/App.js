@@ -4,7 +4,6 @@ import './doge2.jpg';
 import jsonData from './output.json';
 import axios from 'axios';
 
-const cheerio = require('cheerio');
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
 var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -20,14 +19,10 @@ const App = () => {
   const [investment, setInvestment] = useState(0)
   const [axiosData, setAxiosData] = useState(null)
 
-  let page = null;
-
   useEffect(()=>{
     axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end='+today.toString())
       .then((response)=>{if(response.data){setAxiosData(response.data)}})
       .then(()=>{if(axiosData !== null){console.log(axiosData)}})
-      // .then(()=>{page = cheerio.load('<html lang="en">...</html>')})
-      // .then(()=>console.log(page))
   },[axiosData])
 
   const investHandler = (event) => {
