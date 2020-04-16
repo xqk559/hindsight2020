@@ -20,7 +20,7 @@ const App = () => {
   useEffect(()=>{
     axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end='+today.toString())
       .then((response)=>{if(response.data){setAxiosData(response.data)}})
-      .then(()=>{if(axiosData !== null){console.log(axiosData.slice((axiosData.search("2020-04-14T08:41:03.000Z\",\"quote\":{\"USD\":{\"open\":") + 49), (axiosData.search("2020-04-14T08:41:03.000Z\",\"quote\":{\"USD\":{\"open\":"))+60))}})
+      .then(()=>{if(axiosData !== null){console.log(axiosData.slice((axiosData.search("2020-04-13................................\"open\":")+49),(axiosData.search("2020-04-13................................\"open\":")+60)))}})
   },[axiosData])
 
   const investHandler = (event) => {
