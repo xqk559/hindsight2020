@@ -3,6 +3,7 @@ import './App.css';
 import './doge2.jpg';
 import jsonData from './output.json';
 import axios from 'axios';
+import Spinner from './spinner';
 
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
@@ -13,19 +14,18 @@ today = yyyy + mm + dd;
 let todayHyphenated = yyyy + "-" + mm + "-" + (dd - 1);
 let todayHyphenatedString = todayHyphenated.toString();
 
-console.log(todayHyphenatedString);
-
 const App = () => {
   const [json] = useState(jsonData);
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(0);
   const [investment, setInvestment] = useState(0);
   const [axiosData, setAxiosData] = useState(null);
   const [todaysPrice, setTodaysPrice] = useState(null);
 
+  let todaysPriceNumber = Number(todaysPrice).toFixed(2);
+
   useEffect(()=>{
     axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end='+today.toString())
       .then((response)=>{if(response.data){setAxiosData(response.data)}})
-      .then(()=>{if(axiosData !== null){console.log(axiosData.slice((axiosData.search(todayHyphenatedString + "................................\"open\":")+49),(axiosData.search(todayHyphenatedString + "................................\"open\":")+60)))}})
       .then(()=>{if(axiosData !== null)setTodaysPrice((axiosData.slice((axiosData.search(todayHyphenatedString + "................................\"open\":")+49),(axiosData.search(todayHyphenatedString + "................................\"open\":")+60))))})
     },[axiosData])
 
@@ -35,6 +35,13 @@ const App = () => {
 
   const dateHandler = (event) => {
     setDate(event.target.value)
+  }
+
+  let selectedPrice = null;
+
+  if(axiosData !== null){
+    selectedPrice = (axiosData.slice((axiosData.search(date + "................................\"open\":")+49),(axiosData.search(date + "................................\"open\":")+60)))
+    console.log(selectedPrice)
   }
 
   let jsn = json.title;
@@ -49,20 +56,20 @@ const App = () => {
 
   let k = str.slice(searchAlt+13,searchAlt+19);
 
-  let coins = investment/k;
+  let coins = investment/selectedPrice;
   let rounder = coins.toFixed(5);
 
   let todayValue;
-  todayValue = rounder * replacedText[24];
+  todayValue = rounder * todaysPriceNumber;
   let tvRound = todayValue.toFixed(2);
 
-  let per = (100*(replacedText[24]/k)).toFixed(2);
+  let per = (100*(todaysPriceNumber/selectedPrice)).toFixed(2);
 
   const updatedPage = () => {
-    if(!isNaN(rounder) && investment !== 0 && date.length === 12){
+    if(!isNaN(rounder) && investment !== 0 && date.length === 10){
       return (
         <div>
-          <p>On {date}, Bitcoin was worth ${k}.</p>
+          <p>On {date}, Bitcoin was worth ${Number(selectedPrice).toFixed(2)}.</p>
           <p>If you invested ${investment} on {date},</p>
           <p>You would have {rounder} coins, valued today at ${tvRound}.</p>
           <p>This would be a {per}% difference.</p>
@@ -73,7 +80,9 @@ const App = () => {
 
   const todaysPriceChecker = () => {
     if(todaysPrice !== null){
-      return Number(todaysPrice).toFixed(2);
+      return todaysPriceNumber;
+    } else {
+      return <Spinner/>;
     }
   }
 
@@ -104,7 +113,7 @@ const App = () => {
           key="invest" />
       </div>
       <br></br>
-      <p>Today, Bitcoin is worth ${todaysPriceChecker()}.</p>
+      <div>Today, Bitcoin is worth ${todaysPriceChecker()}.</div>
       {updatedPage()}
     </div>
   );
