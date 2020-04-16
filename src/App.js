@@ -10,18 +10,24 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 
 today = yyyy + mm + dd;
+let todayHyphenated = yyyy + "-" + mm + "-" + (dd - 1);
+let todayHyphenatedString = todayHyphenated.toString();
+
+console.log(todayHyphenatedString);
 
 const App = () => {
-  const [json] = useState(jsonData)
-  const [date, setDate] = useState(null)
-  const [investment, setInvestment] = useState(0)
-  const [axiosData, setAxiosData] = useState(null)
+  const [json] = useState(jsonData);
+  const [date, setDate] = useState(null);
+  const [investment, setInvestment] = useState(0);
+  const [axiosData, setAxiosData] = useState(null);
+  const [todaysPrice, setTodaysPrice] = useState(null);
 
   useEffect(()=>{
     axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end='+today.toString())
       .then((response)=>{if(response.data){setAxiosData(response.data)}})
-      .then(()=>{if(axiosData !== null){console.log(axiosData.slice((axiosData.search("2020-04-13................................\"open\":")+49),(axiosData.search("2020-04-13................................\"open\":")+60)))}})
-  },[axiosData])
+      .then(()=>{if(axiosData !== null){console.log(axiosData.slice((axiosData.search(todayHyphenatedString + "................................\"open\":")+49),(axiosData.search(todayHyphenatedString + "................................\"open\":")+60)))}})
+      .then(()=>{if(axiosData !== null)setTodaysPrice((axiosData.slice((axiosData.search(todayHyphenatedString + "................................\"open\":")+49),(axiosData.search(todayHyphenatedString + "................................\"open\":")+60))))})
+    },[axiosData])
 
   const investHandler = (event) => {
     setInvestment(event.target.value)
@@ -65,6 +71,12 @@ const App = () => {
     }
   }
 
+  const todaysPriceChecker = () => {
+    if(todaysPrice !== null){
+      return Number(todaysPrice).toFixed(2);
+    }
+  }
+
   return (
     <div className="App">
       <h1 className="rainbow">Hindsight BC</h1>
@@ -92,7 +104,7 @@ const App = () => {
           key="invest" />
       </div>
       <br></br>
-      <p>Today, Bitcoin is worth ${replacedText[24]}.</p>
+      <p>Today, Bitcoin is worth ${todaysPriceChecker()}.</p>
       {updatedPage()}
     </div>
   );
