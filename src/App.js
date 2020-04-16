@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import './doge2.jpg';
-import jsonData from './output.json';
 import axios from 'axios';
 import Spinner from './spinner';
 
@@ -15,7 +14,6 @@ let todayHyphenated = yyyy + "-" + mm + "-" + (dd - 1);
 let todayHyphenatedString = todayHyphenated.toString();
 
 const App = () => {
-  const [json] = useState(jsonData);
   const [date, setDate] = useState(0);
   const [investment, setInvestment] = useState(0);
   const [axiosData, setAxiosData] = useState(null);
@@ -41,20 +39,7 @@ const App = () => {
 
   if(axiosData !== null){
     selectedPrice = (axiosData.slice((axiosData.search(date + "................................\"open\":")+49),(axiosData.search(date + "................................\"open\":")+60)))
-    console.log(selectedPrice)
   }
-
-  let jsn = json.title;
-  const reactStringReplace = require('react-string-replace')
-
-  let replacedText = reactStringReplace(jsn, "\n", (match, i) => (
-    <div></div>
-  ));
-
-  let str = json.title;
-  let searchAlt = str.search(date);
-
-  let k = str.slice(searchAlt+13,searchAlt+19);
 
   let coins = investment/selectedPrice;
   let rounder = coins.toFixed(5);
@@ -98,7 +83,7 @@ const App = () => {
       <br></br>
       <br></br>
       <div className="Inputs">
-        <div>Date (ex: Apr 02, 2014): &nbsp;</div>
+        <div>Date (ex: 2020-04-05): &nbsp;</div>
         <input
           type="text"
           className="date"
