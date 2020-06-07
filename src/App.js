@@ -10,7 +10,10 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 
 today = yyyy + mm + dd;
-let todayHyphenated = yyyy + "-" + mm + "-" + (dd - 1);
+
+console.log(dd)
+
+let todayHyphenated = yyyy + "-" + mm + "-" + ("0" + (dd - 1).toString());
 let todayHyphenatedString = todayHyphenated.toString();
 
 const App = () => {
@@ -25,6 +28,7 @@ const App = () => {
     axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end='+today.toString())
       .then((response)=>{if(response.data){setAxiosData(response.data)}})
       .then(()=>{if(axiosData !== null)setTodaysPrice((axiosData.slice((axiosData.search(todayHyphenatedString + "................................\"open\":")+49),(axiosData.search(todayHyphenatedString + "................................\"open\":")+60))))})
+      .then(()=>{console.log(todayHyphenatedString)})
     },[axiosData])
 
   const investHandler = (event) => {
