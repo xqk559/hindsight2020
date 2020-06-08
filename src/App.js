@@ -4,17 +4,27 @@ import './doge2.jpg';
 import axios from 'axios';
 import Spinner from './spinner';
 
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = today.getFullYear();
+let today = new Date();
+let dd = String(today.getDate()).padStart(2, '0');
+let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+let yyyy = today.getFullYear();
 
 today = yyyy + mm + dd;
 
 console.log(dd)
 
-let todayHyphenated = yyyy + "-" + mm + "-" + ("0" + (dd - 1).toString());
+if(dd[0] == 0){
+  dd = "0" + (dd - 1)
+} else {
+  dd = dd - 1
+}
+
+console.log(dd)
+
+let todayHyphenated = yyyy + "-" + mm + "-" + dd;
 let todayHyphenatedString = todayHyphenated.toString();
+
+console.log(todayHyphenated)
 
 const App = () => {
   const [date, setDate] = useState(0);
@@ -28,7 +38,6 @@ const App = () => {
     axios.get('https://cors-anywhere.herokuapp.com/https://coinmarketcap.com/currencies/bitcoin/historical-data/?start=20130428&end='+today.toString())
       .then((response)=>{if(response.data){setAxiosData(response.data)}})
       .then(()=>{if(axiosData !== null)setTodaysPrice((axiosData.slice((axiosData.search(todayHyphenatedString + "................................\"open\":")+49),(axiosData.search(todayHyphenatedString + "................................\"open\":")+60))))})
-      .then(()=>{console.log(todayHyphenatedString)})
     },[axiosData])
 
   const investHandler = (event) => {
